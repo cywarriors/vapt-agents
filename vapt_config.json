@@ -1,0 +1,75 @@
+{
+  "timeouts": {
+    "nmap_basic": 300,
+    "nmap_comprehensive": 600,
+    "nmap_nse": 900,
+    "nessus": 1800,
+    "openvas": 1800,
+    "dns_resolution": 10
+  },
+  "scan_behavior": {
+    "max_retries": 3,
+    "retry_delay": 5,
+    "timing_template": "T3",
+    "require_user_confirmation": true,
+    "allow_private_ips": true,
+    "enable_audit_logging": true
+  },
+  "reporting": {
+    "output_format": "text",
+    "include_executive_summary": true,
+    "save_results": true,
+    "results_directory": "./scan_results",
+    "include_metadata": true
+  },
+  "tools": {
+    "nmap": {
+      "enabled": true,
+      "path": "nmap",
+      "default_args": [
+        "-A",
+        "-T3"
+      ],
+      "script_categories": [
+        "vuln",
+        "exploit"
+      ]
+    },
+    "nessus": {
+      "enabled": false,
+      "api_url": null,
+      "access_key": null,
+      "secret_key": null,
+      "default_template": "basic"
+    },
+    "openvas": {
+      "enabled": false,
+      "gvm_host": "127.0.0.1",
+      "gvm_port": 9390,
+      "username": null,
+      "password": null,
+      "default_config": "Full and fast"
+    }
+  },
+  "security": {
+    "forbidden_domains": [
+      ".*\\.gov$",
+      ".*\\.mil$",
+      ".*bank.*",
+      ".*hospital.*"
+    ],
+    "require_explicit_authorization": true,
+    "log_all_attempts": true,
+    "rate_limiting": {
+      "enabled": false,
+      "max_scans_per_hour": 10
+    }
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "file": "vapt_agents.log",
+    "max_size_mb": 100,
+    "backup_count": 5
+  }
+}

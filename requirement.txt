@@ -1,0 +1,10 @@
+crewai
+crewai_tools
+python-nmap
+requests
+jsonschema
+click
+rich
+pydantic
+tenacity
+PyYAML
