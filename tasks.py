@@ -1,7 +1,6 @@
 from crewai import Task
 from agents import vuln_scan_agent, vuln_comprehensive_scanner_agent, report_generator_agent
-from tools import NmapReconTool, NessusScanTool, OpenVASScanTool, NmapNSETool, ReportWriterTool
-
+from agents import nessus_tool, nmap_tool, openvas_tool, nmap_nse_tool, report_writer_tool
 # Task for Reconnaissance Specialist agent
 reconnaissance_task = Task(
     description=(
@@ -14,7 +13,7 @@ reconnaissance_task = Task(
         "and service banners for each target. The output should be structured and ready for further analysis."
     ),
     agent=vuln_scan_agent,
-    tools=[NmapReconTool],
+    tools=[nmap_tool],
     async_execution=False
 )
 
@@ -31,7 +30,7 @@ comprehensive_vuln_scan_task = Task(
         "Findings should be organized and prioritized for further reporting."
     ),
     agent=vuln_comprehensive_scanner_agent,
-    tools=[NessusScanTool, OpenVASScanTool, NmapNSETool],
+    tools=[nessus_tool, openvas_tool, nmap_nse_tool ],
     async_execution=False
 )
 
@@ -48,6 +47,6 @@ report_generation_task = Task(
         "The report should be clear, actionable, and formatted for both technical and non-technical audiences."
     ),
     agent=report_generator_agent,
-    tools=[ReportWriterTool],
+    tools=[report_writer_tool],
     async_execution=False
 )

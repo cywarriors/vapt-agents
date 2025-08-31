@@ -29,6 +29,9 @@ VAPT-Agents/
 - **Vulnerability Scanning**: Multiple tool integration (Nmap NSE, Nessus*, OpenVAS*)
 - **Intelligent Reporting**: Automated report generation with OWASP ASVS mapping
 - **Multi-Agent Coordination**: Seamless workflow between specialized agents
+- **Structured Output Management**: Export results in JSON, HTML, CSV, XML, TXT, YAML
+- **Command-line Interface**: Manage, convert, and export scan results via `output_cli.py`
+- **Demo & File I/O**: Demonstration of output and file operations via `output_demo.py`
 
 *Note: Nessus and OpenVAS integrations are currently placeholder implementations*
 
@@ -49,6 +52,8 @@ VAPT-Agents/
 - Nessus (for professional vulnerability scanning)
 - OpenVAS/GVM (for open-source vulnerability scanning)
 
+---
+
 ## 🔧 Installation
 
 1. **Clone the repository**:
@@ -59,7 +64,7 @@ cd vapt-agents
 
 2. **Install Python dependencies**:
 ```bash
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 
 3. **Install Nmap**:
@@ -119,6 +124,7 @@ Generated reports include:
 
 ## ⚙️ Configuration
 
+
 ### Agent Configuration
 
 Modify `agents.py` to customize agent behavior:
@@ -143,6 +149,15 @@ Customize scan parameters in `tools.py`:
 cmd = ["nmap", "-A", "-T4", target]  # Aggressive scan with timing template 4
 ```
 
+### Configuration & Validation
+
+- All configuration is managed via `config.py` and can be updated at runtime or via environment variables.
+- Input validation and error handling are robust, using `TargetValidator` and `ConfigValidator` in `validation.py`.
+- Forbidden targets (e.g., `.gov`, `.mil`, banks, hospitals) are blocked by default.
+- Results and metadata are stored in `scan_results/scan_metadata.db` (SQLite database).
+
+---
+
 ## 🔒 Security Considerations
 
 ### Legal and Ethical Use
@@ -154,38 +169,66 @@ cmd = ["nmap", "-A", "-T4", target]  # Aggressive scan with timing template 4
 - **Comply with all applicable laws and regulations**
 - **Respect network resources and avoid causing service disruptions**
 
-### Best Practices
 
-1. **Scope Validation**: Always verify target authorization
-2. **Rate Limiting**: Use appropriate scan timing to avoid detection
-3. **Data Protection**: Secure scan results and reports
-4. **Responsible Disclosure**: Follow proper vulnerability disclosure practices
+### Basic Usage
 
-## 🔧 Advanced Configuration
+Run the vulnerability assessment with an interactive prompt:
 
-### Custom Tool Integration
-
-Add new security tools by extending the `BaseTool` class:
-
-```python
-class CustomScanTool(BaseTool):
-    name = "custom_scanner"
-    description = "Custom vulnerability scanner implementation"
-    
-    def run(self, target: str) -> str:
-        # Implement your custom tool logic
-        pass
+```bash
+python crew.py
 ```
 
-### Agent Customization
+When prompted, enter the target IP address or hostname:
+```
+Enter the target IP or hostname: 192.168.1.1
+```
 
-Modify agent behavior by updating goals and backstories:
+### Programmatic Usage
 
 ```python
-custom_agent = Agent(
-    role="Custom Security Specialist",
-    goal="Perform specialized security assessment",
+from crew import execute_vuln_scan
+
+# Scan a single target
     backstory="Expert in custom security domain",
+result = execute_vuln_scan(target)
+print(result)
+```
+
+### Example Output
+
+The assessment will proceed through three phases:
+
+1. **Reconnaissance Phase**: Network discovery and enumeration
+2. **Vulnerability Scanning Phase**: Deep security analysis
+3. **Report Generation Phase**: Comprehensive security report
+
+---
+
+## 🖨️ Output Management & CLI
+
+- Scan results can be exported in multiple formats: JSON, HTML, CSV, XML, TXT, YAML.
+- Use the CLI tool for managing and converting results:
+    ```bash
+    python output_cli.py list                # List recent scans
+    python output_cli.py show <scan_id>      # Show scan details
+    python output_cli.py convert <scan_id> html   # Convert to HTML
+    python output_cli.py export --target <target> --formats json html csv
+    python output_cli.py stats               # Show statistics
+    ```
+- See `output_demo.py` for a demonstration of all output features, file I/O, and agent result pipelines.
+
+---
+
+## 🧑‍💻 Example Usage
+
+- See `example_usage.py` for programmatic examples, including:
+    - Basic scan
+    - Comprehensive scan
+    - Batch scan (multiple targets)
+    - Configuration management
+    - Error handling and validation
+
+---
     tools=["custom_tool"],
     verbose=True
 )
@@ -222,6 +265,7 @@ This project includes robust input validation and error handling to ensure safe 
 
 ## 🚧 Known Limitations
 
+
 ### Current Limitations
 
 1. **Placeholder Integrations**: Nessus and OpenVAS tools require actual implementation
@@ -229,6 +273,7 @@ This project includes robust input validation and error handling to ensure safe 
 3. **No Authentication**: Tools don't support authenticated scanning
 4. **Basic Reporting**: Report generation needs enhancement
 5. **Single Target**: No support for multiple targets or subnet scanning
+6. **No Web Dashboard**: Only CLI and file-based outputs are available
 
 ### Planned Enhancements
 
@@ -240,6 +285,15 @@ This project includes robust input validation and error handling to ensure safe 
 - [ ] Multi-target support
 - [ ] Configuration file support
 - [ ] Web dashboard interface
+
+---
+
+## 🧪 Demo
+
+- Run `python output_demo.py` to see output formatting, file I/O, and agent pipeline features in action.
+- Output files are saved in `demo_results/` and `file_demo_outputs/`.
+
+---
 
 ## 🤝 Contributing
 
