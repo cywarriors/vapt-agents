@@ -501,7 +501,7 @@ class NessusScanTool(BaseTool):
             return error_result.to_json()
             
         except Exception as e:
-            error_result = ScanResult(False, "", f"Unexpected error: {str(e)}")
+            error_result = ToolScanResult(False, "", f"Unexpected error: {str(e)}")
             logger.error(f"Nessus unexpected error: {e}")
             return error_result.to_json()
     
@@ -640,22 +640,22 @@ class OpenVASScanTool(BaseTool):
             return scan_result.to_json()
             
         except ValidationError as e:
-            error_result = ScanResult(False, "", f"Validation error: {str(e)}")
+            error_result = ToolScanResult(False, "", f"Validation error: {str(e)}")
             logger.error(f"OpenVAS validation error: {e}")
             return error_result.to_json()
             
         except NetworkError as e:
-            error_result = ScanResult(False, "", f"Network error: {str(e)}")
+            error_result = ToolScanResult(False, "", f"Network error: {str(e)}")
             logger.error(f"OpenVAS network error: {e}")
             return error_result.to_json()
             
         except ScanTimeoutError as e:
-            error_result = ScanResult(False, "", f"Scan timeout: {str(e)}")
+            error_result = ToolScanResult(False, "", f"Scan timeout: {str(e)}")
             logger.error(f"OpenVAS timeout error: {e}")
             return error_result.to_json()
             
         except Exception as e:
-            error_result = ScanResult(False, "", f"Unexpected error: {str(e)}")
+            error_result = ToolScanResult(False, "", f"Unexpected error: {str(e)}")
             logger.error(f"OpenVAS unexpected error: {e}")
             return error_result.to_json()
     
@@ -794,17 +794,17 @@ class NmapNSETool(BaseTool):
             return error_result.to_json()
             
         except NetworkError as e:
-            error_result = ScanResult(False, "", f"Network error: {str(e)}")
+            error_result = ToolScanResult(False, "", f"Network error: {str(e)}")
             logger.error(f"Nmap NSE network error: {e}")
             return error_result.to_json()
             
         except ScanTimeoutError as e:
-            error_result = ScanResult(False, "", f"Scan timeout: {str(e)}")
+            error_result = ToolScanResult(False, "", f"Scan timeout: {str(e)}")
             logger.error(f"Nmap NSE timeout error: {e}")
             return error_result.to_json()
             
         except Exception as e:
-            error_result = ScanResult(False, "", f"Unexpected error: {str(e)}")
+            error_result = ToolScanResult(False, "", f"Unexpected error: {str(e)}")
             logger.error(f"Nmap NSE unexpected error: {e}")
             return error_result.to_json()
     
@@ -851,7 +851,7 @@ class NmapNSETool(BaseTool):
                 
                 if result.returncode == 0:
                     logger.info(f"Nmap NSE scan successful for {target} in {execution_time:.2f}s")
-                    return ScanResult(True, result.stdout, metadata=metadata)
+                    return ToolScanResult(True, result.stdout, metadata=metadata)
                 else:
                     logger.warning(f"Nmap NSE returned non-zero exit code {result.returncode}")
                     error_msg = f"Nmap NSE error (exit code {result.returncode}): {result.stderr}"
@@ -864,7 +864,7 @@ class NmapNSETool(BaseTool):
                             time.sleep(self.retry_delay)
                             continue
                     
-                    return ScanResult(False, result.stdout, error_msg, metadata)
+                    return ToolScanResult(False, result.stdout, error_msg, metadata)
                     
             except subprocess.TimeoutExpired:
                 timeout_msg = f"Nmap NSE scan timed out after {timeout} seconds"
@@ -1005,12 +1005,12 @@ class ReportWriterTool(BaseTool):
             return report_result.to_json()
             
         except ValidationError as e:
-            error_result = ScanResult(False, "", f"Validation error: {str(e)}")
+            error_result = ToolScanResult(False, "", f"Validation error: {str(e)}")
             logger.error(f"Report validation error: {e}")
             return error_result.to_json()
             
         except Exception as e:
-            error_result = ScanResult(False, "", f"Report generation error: {str(e)}")
+            error_result = ToolScanResult(False, "", f"Report generation error: {str(e)}")
             logger.error(f"Report generation error: {e}")
             return error_result.to_json()
     
@@ -1060,7 +1060,7 @@ class ReportWriterTool(BaseTool):
             }
             
             logger.info(f"Report generated successfully in {execution_time:.2f}s")
-            return ScanResult(True, report_data, metadata=metadata)
+            return ToolScanResult(True, report_data, metadata=metadata)
             
         except Exception as e:
             error_msg = f"Error generating report: {str(e)}"
